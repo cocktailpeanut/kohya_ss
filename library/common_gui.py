@@ -165,7 +165,6 @@ def get_file_path(
 ):
     if (
         not any(var in os.environ for var in ENV_EXCLUSION)
-        and sys.platform != 'darwin'
     ):
         current_file_path = file_path
         # log.info(f'current file path: {current_file_path}')
@@ -203,7 +202,6 @@ def get_file_path(
 def get_any_file_path(file_path=''):
     if (
         not any(var in os.environ for var in ENV_EXCLUSION)
-        and sys.platform != 'darwin'
     ):
         current_file_path = file_path
         # log.info(f'current file path: {current_file_path}')
@@ -235,7 +233,6 @@ def remove_doublequote(file_path):
 def get_folder_path(folder_path=''):
     if (
         not any(var in os.environ for var in ENV_EXCLUSION)
-        and sys.platform != 'darwin'
     ):
         current_folder_path = folder_path
 
@@ -258,7 +255,6 @@ def get_saveasfile_path(
 ):
     if (
         not any(var in os.environ for var in ENV_EXCLUSION)
-        and sys.platform != 'darwin'
     ):
         current_file_path = file_path
         # log.info(f'current file path: {current_file_path}')
@@ -297,7 +293,6 @@ def get_saveasfilename_path(
 ):
     if (
         not any(var in os.environ for var in ENV_EXCLUSION)
-        and sys.platform != 'darwin'
     ):
         current_file_path = file_path
         # log.info(f'current file path: {current_file_path}')
