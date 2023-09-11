@@ -12,7 +12,7 @@ import os
 from library.custom_logging import setup_logging
 import tk
 import threading
-import common_gui
+import library.common_gui as common_gui
 
 # Set up logging
 log = setup_logging()
