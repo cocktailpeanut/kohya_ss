@@ -11,6 +11,7 @@ from library.class_lora_tab import LoRATools
 import os
 from library.custom_logging import setup_logging
 import tk
+import threading
 
 # Set up logging
 log = setup_logging()
