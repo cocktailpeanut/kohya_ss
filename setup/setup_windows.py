@@ -1,3 +1,4 @@
+import argparse
 import subprocess
 import os
 import filecmp
@@ -236,4 +237,10 @@ def main_menu():
 if __name__ == '__main__':
     setup_common.ensure_base_requirements()
     setup_common.setup_logging()
-    main_menu()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--torch2', action='store_true', help='default install option with torch2')
+    args = parser.parse_args()
+    if args.torch2 is None:
+      main_menu()
+    else:
+      install_kohya_ss_torch2()

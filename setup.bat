@@ -27,10 +27,10 @@ call .\venv\Scripts\activate.bat
 REM Check if the batch was started via double-click
 IF /i "%comspec% /c %~0 " equ "%cmdcmdline:"=%" (
     REM echo This script was started by double clicking.
-    cmd /k python .\setup\setup_windows.py
+    cmd /k python .\setup\setup_windows.py %*
 ) ELSE (
     REM echo This script was started from a command prompt.
-    python .\setup\setup_windows.py
+    python .\setup\setup_windows.py %*
 )
 
 :: Deactivate the virtual environment
