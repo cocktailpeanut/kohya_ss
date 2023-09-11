@@ -10,6 +10,7 @@ import json
 
 from library.custom_logging import setup_logging
 from datetime import datetime
+import tk
 
 # Set up logging
 log = setup_logging()
@@ -52,6 +53,10 @@ ALL_PRESET_MODELS = (
 
 ENV_EXCLUSION = ['COLAB_GPU', 'RUNPOD_POD_ID']
 
+def dispatch(name, *args):
+    tk.tasks.put((name, args))
+    ret = tk.responses.get()
+    return ret
 
 def check_if_model_exist(
     output_name, output_dir, save_model_as, headless=False
@@ -160,7 +165,10 @@ def get_dir_and_file(file_path):
     return (dir_path, file_name)
 
 
-def get_file_path(
+def get_file_path(*args):
+    return dispatch("_get_file_path", *args)
+
+def _get_file_path(
     file_path='', default_extension='.json', extension_name='Config files'
 ):
     if (
@@ -171,11 +179,6 @@ def get_file_path(
 
         initial_dir, initial_file = get_dir_and_file(file_path)
 
-        # Create a hidden Tkinter root window
-        root = Tk()
-        root.wm_attributes('-topmost', 1)
-        root.withdraw()
-
         # Show the open file dialog and get the selected file path
         file_path = filedialog.askopenfilename(
             filetypes=(
@@ -185,10 +188,8 @@ def get_file_path(
             defaultextension=default_extension,
             initialfile=initial_file,
             initialdir=initial_dir,
+            master=tk.get()
         )
-
-        # Destroy the hidden root window
-        root.destroy()
 
         # If no file is selected, use the current file path
         if not file_path:
@@ -199,6 +200,9 @@ def get_file_path(
     return file_path
 
 
+def get_any_file_path(*args):
+    return dispatch("_get_any_file_path", *args)
+
 def get_any_file_path(file_path=''):
     if (
         not any(var in os.environ for var in ENV_EXCLUSION)
@@ -208,14 +212,11 @@ def get_any_file_path(file_path=''):
 
         initial_dir, initial_file = get_dir_and_file(file_path)
 
-        root = Tk()
-        root.wm_attributes('-topmost', 1)
-        root.withdraw()
         file_path = filedialog.askopenfilename(
             initialdir=initial_dir,
             initialfile=initial_file,
+            master=tk.get()
         )
-        root.destroy()
 
         if file_path == '':
             file_path = current_file_path
@@ -230,6 +231,9 @@ def remove_doublequote(file_path):
     return file_path
 
 
+def get_folder_path(*args):
+    return dispatch("_get_folder_path", *args)
+
 def get_folder_path(folder_path=''):
     if (
         not any(var in os.environ for var in ENV_EXCLUSION)
@@ -238,17 +242,15 @@ def get_folder_path(folder_path=''):
 
         initial_dir, initial_file = get_dir_and_file(folder_path)
 
-        root = Tk()
-        root.wm_attributes('-topmost', 1)
-        root.withdraw()
-        folder_path = filedialog.askdirectory(initialdir=initial_dir)
-        root.destroy()
+        folder_path = filedialog.askdirectory(initialdir=initial_dir, master=tk.get())
 
         if folder_path == '':
             folder_path = current_folder_path
 
     return folder_path
 
+def get_saveasfile_path(*args):
+    return dispatch("_get_saveasfile_path", *args)
 
 def get_saveasfile_path(
     file_path='', defaultextension='.json', extension_name='Config files'
@@ -261,9 +263,6 @@ def get_saveasfile_path(
 
         initial_dir, initial_file = get_dir_and_file(file_path)
 
-        root = Tk()
-        root.wm_attributes('-topmost', 1)
-        root.withdraw()
         save_file_path = filedialog.asksaveasfile(
             filetypes=(
                 (f'{extension_name}', f'{defaultextension}'),
@@ -272,8 +271,8 @@ def get_saveasfile_path(
             defaultextension=defaultextension,
             initialdir=initial_dir,
             initialfile=initial_file,
+            master=tk.get()
         )
-        root.destroy()
 
         # log.info(save_file_path)
 
@@ -287,6 +286,8 @@ def get_saveasfile_path(
 
     return file_path
 
+def get_saveasfilename_path(*args):
+    return dispatch("_get_saveasfilename_path", *args)
 
 def get_saveasfilename_path(
     file_path='', extensions='*', extension_name='Config files'
@@ -299,9 +300,6 @@ def get_saveasfilename_path(
 
         initial_dir, initial_file = get_dir_and_file(file_path)
 
-        root = Tk()
-        root.wm_attributes('-topmost', 1)
-        root.withdraw()
         save_file_path = filedialog.asksaveasfilename(
             filetypes=(
                 (f'{extension_name}', f'{extensions}'),
@@ -310,8 +308,8 @@ def get_saveasfilename_path(
             defaultextension=extensions,
             initialdir=initial_dir,
             initialfile=initial_file,
+            master=tk.get()
         )
-        root.destroy()
 
         if save_file_path == '':
             file_path = current_file_path

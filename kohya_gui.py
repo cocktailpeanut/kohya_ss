@@ -10,6 +10,7 @@ from library.class_lora_tab import LoRATools
 
 import os
 from library.custom_logging import setup_logging
+import tk
 
 # Set up logging
 log = setup_logging()
@@ -96,6 +97,11 @@ def UI(**kwargs):
         launch_kwargs['share'] = share
     interface.launch(**launch_kwargs)
 
+def TK():
+    while True:
+        next_task, args = tk.tasks.get()
+        ret = getattr(common_gui, next_task)(*args)
+        tk.responses.put(ret)
 
 if __name__ == '__main__':
     # torch.cuda.set_per_process_memory_fraction(0.48)
@@ -130,12 +136,14 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    UI(
-        username=args.username,
-        password=args.password,
-        inbrowser=args.inbrowser,
-        server_port=args.server_port,
-        share=args.share,
-        listen=args.listen,
-        headless=args.headless,
-    )
+    t = threading.Thread(target=UI, kwargs={
+        'username':args.username,
+        'password':args.password,
+        'inbrowser':args.inbrowser,
+        'server_port':args.server_port,
+        'share':args.share,
+        'listen':args.listen,
+        'headless':args.headless,
+    })
+    t.start()
+    TK()
