@@ -1,4 +1,4 @@
-torch torchvision
+torch torchvision -f https://download.pytorch.org/whl/nightly/cpu
 xformers bitsandbytes==0.41.1
 tensorflow-macos tensorflow-metal tensorboard==2.12.1
 -r requirements.txt

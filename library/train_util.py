@@ -2191,6 +2191,8 @@ def cache_batch_latents(
     # FIXME this slows down caching a lot, specify this as an option
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
+    elif torch.backends.mps.is_available():
+        torch.mps.empty_cache()
 
 
 def cache_batch_text_encoder_outputs(
@@ -3826,7 +3828,10 @@ def load_target_model(args, weight_dtype, accelerator, unet_use_linear_projectio
                 vae.to(accelerator.device)
 
             gc.collect()
-            torch.cuda.empty_cache()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+            elif torch.backends.mps.is_available():
+                torch.mps.empty_cache()
         accelerator.wait_for_everyone()
 
     text_encoder, unet = transform_if_model_is_DDP(text_encoder, unet)
@@ -4437,7 +4442,12 @@ def sample_images_common(
     os.makedirs(save_dir, exist_ok=True)
 
     rng_state = torch.get_rng_state()
-    cuda_rng_state = torch.cuda.get_rng_state() if torch.cuda.is_available() else None
+    cuda_rng_state = None
+    mps_rng_state = None
+    if torch.cuda.is_available():
+        cuda_rng_state = torch.cuda.get_rng_state()
+    elif torch.backends.mps.is_available():
+        mps_rng_state = torch.mps.get_rng_state()
 
     with torch.no_grad():
         # with accelerator.autocast():
@@ -4511,7 +4521,10 @@ def sample_images_common(
 
             if seed is not None:
                 torch.manual_seed(seed)
-                torch.cuda.manual_seed(seed)
+                if torch.cuda.is_available():
+                    torch.cuda.manual_seed(seed)
+                elif torch.backends.mps.is_available():
+                    torch.mps.manual_seed(seed)
 
             if prompt_replacement is not None:
                 prompt = prompt.replace(prompt_replacement[0], prompt_replacement[1])
@@ -4567,11 +4580,16 @@ def sample_images_common(
 
     # clear pipeline and cache to reduce vram usage
     del pipeline
-    torch.cuda.empty_cache()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+    elif torch.backends.mps.is_available():
+        torch.mps.empty_cache()
 
     torch.set_rng_state(rng_state)
     if cuda_rng_state is not None:
         torch.cuda.set_rng_state(cuda_rng_state)
+    if mps_rng_state is not None:
+        torch.mps.set_rng_state(mps_rng_state)
     vae.to(org_vae_device)
 
 
