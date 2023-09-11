@@ -203,7 +203,7 @@ def _get_file_path(
 def get_any_file_path(*args):
     return dispatch("_get_any_file_path", *args)
 
-def get_any_file_path(file_path=''):
+def _get_any_file_path(file_path=''):
     if (
         not any(var in os.environ for var in ENV_EXCLUSION)
     ):
@@ -234,7 +234,7 @@ def remove_doublequote(file_path):
 def get_folder_path(*args):
     return dispatch("_get_folder_path", *args)
 
-def get_folder_path(folder_path=''):
+def _get_folder_path(folder_path=''):
     if (
         not any(var in os.environ for var in ENV_EXCLUSION)
     ):
@@ -252,7 +252,7 @@ def get_folder_path(folder_path=''):
 def get_saveasfile_path(*args):
     return dispatch("_get_saveasfile_path", *args)
 
-def get_saveasfile_path(
+def _get_saveasfile_path(
     file_path='', defaultextension='.json', extension_name='Config files'
 ):
     if (
@@ -289,7 +289,7 @@ def get_saveasfile_path(
 def get_saveasfilename_path(*args):
     return dispatch("_get_saveasfilename_path", *args)
 
-def get_saveasfilename_path(
+def _get_saveasfilename_path(
     file_path='', extensions='*', extension_name='Config files'
 ):
     if (
