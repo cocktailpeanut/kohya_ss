@@ -1,4 +1,5 @@
 import gradio as gr
+import platform
 from .common_gui import get_folder_path, get_any_file_path
 
 
@@ -147,7 +148,7 @@ class AdvancedTraining:
             self.xformers = gr.Dropdown(
                 label='CrossAttention',
                 choices=['none', 'sdpa', 'xformers'],
-                value='xformers',
+                value=('none' if platform.system() == 'Darwin' else 'xformers'),
             )
             self.color_aug = gr.Checkbox(
                 label='Color augmentation', value=False

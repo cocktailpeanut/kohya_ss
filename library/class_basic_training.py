@@ -1,5 +1,6 @@
 import gradio as gr
 import os
+import platform
 
 
 class BasicTraining:
@@ -47,7 +48,7 @@ class BasicTraining:
                     'fp16',
                     'bf16',
                 ],
-                value='fp16',
+                value=('no' if platform.system() == 'Darwin' else 'fp16'),
             )
             self.save_precision = gr.Dropdown(
                 label='Save precision',
@@ -56,7 +57,7 @@ class BasicTraining:
                     'fp16',
                     'bf16',
                 ],
-                value='fp16',
+                value=('float' if platform.system() == 'Darwin' else 'fp16'),
             )
             self.num_cpu_threads_per_process = gr.Slider(
                 minimum=1,
@@ -108,7 +109,7 @@ class BasicTraining:
                     'SGDNesterov',
                     'SGDNesterov8bit',
                 ],
-                value='AdamW8bit',
+                value=('AdamW' if platform.system() == 'Darwin' else 'AdamW8bit'),
                 interactive=True,
             )
         with gr.Row():
