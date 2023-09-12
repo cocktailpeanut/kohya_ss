@@ -13,12 +13,14 @@ from library.custom_logging import setup_logging
 import tk
 import threading
 import library.common_gui as common_gui
+from localization_ext import add_javascript
 
 # Set up logging
 log = setup_logging()
 
 
 def UI(**kwargs):
+    add_javascript(kwargs.get('language'))
     css = ''
 
     headless = kwargs.get('headless', False)
@@ -134,6 +136,9 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         '--headless', action='store_true', help='Is the server headless'
+    )
+    parser.add_argument(
+        '--language', type=str, default=None, help='Set custom language'
     )
 
     args = parser.parse_args()
