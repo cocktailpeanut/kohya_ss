@@ -16,4 +16,5 @@ def get():
     root.wm_attributes('-topmost', 1)
     root.withdraw()
     root.attributes('-alpha', 0)
+    root.geometry("0x0")
   return root
